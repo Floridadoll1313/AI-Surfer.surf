@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function onRequest(context) {
-  const genAI = new GoogleGenerativeAI(context.env.GEMINI_API_KEY);
+  const genAI = new GoogleGenerativeAI(gen-lang-client-0319503150);
 
   const model = genAI.getGenerativeModel({
     model: "gemini-3-flash-preview"
