@@ -29,6 +29,11 @@ service cloud.firestore {
     //   - content: string (required) - Story text (max 2000 chars)
     //   - created_at: timestamp (required) - Server timestamp
     //
+    // Collection: user_progress
+    // Document ID: {userId}
+    // Fields:
+    //   - completedQuests: string[] (required) - List of completed module IDs
+    //
     // ===============================================================
 
     // ===============================================================
@@ -53,7 +58,9 @@ service cloud.firestore {
       return data.keys().hasAll(['uid', 'email', 'role']) &&
              data.uid is string && data.uid == request.auth.uid &&
              data.email is string && data.email.size() > 5 &&
-             data.role in ['user', 'admin'];
+             data.role in ['user', 'admin'] &&
+             (!('bio' in data) || (data.bio is string && data.bio.size() <= 500)) &&
+             (!('location' in data) || (data.location is string && data.location.size() <= 100));
     }
 
     function isValidChatMessage(data) {
@@ -71,18 +78,39 @@ service cloud.firestore {
              data.created_at == request.time;
     }
 
+    function isValidPublicUser(data) {
+      return data.keys().hasAll(['uid', 'displayName']) &&
+             data.uid == request.auth.uid &&
+             data.displayName is string && data.displayName.size() > 0 &&
+             (!('photoURL' in data) || data.photoURL is string) &&
+             (!('bio' in data) || (data.bio is string && data.bio.size() <= 500)) &&
+             (!('location' in data) || (data.location is string && data.location.size() <= 100));
+    }
+
+    function isValidUserProgress(data) {
+      return data.keys().hasAll(['completedQuests']) &&
+             data.completedQuests is list &&
+             data.completedQuests.size() <= 100; // Realistic limit
+    }
+
     // ===============================================================
     // Rules
     // ===============================================================
 
     match /users/{userId} {
       // Users can only read their own full profile.
-      // Public profiles would need a separate collection or filtered fields.
       allow read: if isOwner(userId) || isAdmin();
       allow create: if isAuthenticated() && isValidUser(request.resource.data) && 
                       (request.resource.data.role == 'user' || isAdmin());
       allow update: if isOwner(userId) && isValidUser(request.resource.data) && 
                       request.resource.data.role == resource.data.role; // Cannot change own role
+    }
+
+    match /users_public/{userId} {
+      // Public profiles are readable by everyone to support the directory and landing page.
+      allow read: if true;
+      allow create, update: if isOwner(userId) && isValidPublicUser(request.resource.data);
+      allow delete: if isAdmin();
     }
 
     match /chat_messages/{messageId} {
@@ -95,6 +123,11 @@ service cloud.firestore {
       allow read: if true; // Publicly readable
       allow create: if isAuthenticated() && isValidMemorialStory(request.resource.data);
       allow update, delete: if isAdmin();
+    }
+
+    match /user_progress/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create, update: if isOwner(userId) && isValidUserProgress(request.resource.data);
     }
   }
 }

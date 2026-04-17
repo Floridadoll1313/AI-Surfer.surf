@@ -16,6 +16,15 @@ import { Memorial } from './pages/Memorial';
 import { MemberChat } from './pages/MemberChat';
 import { ModuleLibrary } from './pages/ModuleLibrary';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { AIStudio } from './pages/AIStudio';
+import { AISurfer } from './pages/AISurfer';
+import { SupabaseVault } from './pages/SupabaseVault';
+import { Profile } from './pages/Profile';
+import { Dashboard } from './pages/Dashboard';
+import { MemberDirectory } from './pages/MemberDirectory';
+import { ArchipelagoMap } from './pages/ArchipelagoMap';
+import { Marketplace } from './pages/Marketplace';
+import { News } from './pages/News';
 import { AuthProvider } from './components/AuthProvider';
 
 export default function App() {
@@ -34,6 +43,15 @@ export default function App() {
           <Route path="/chat" element={<MemberChat />} />
           <Route path="/academy" element={<ModuleLibrary />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/studio" element={<AIStudio />} />
+          <Route path="/ai-surfer" element={<AISurfer />} />
+          <Route path="/supabase-vault" element={<SupabaseVault />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/directory" element={<MemberDirectory />} />
+          <Route path="/map" element={<ArchipelagoMap />} />
+          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/news" element={<News />} />
         </Routes>
       </Layout>
     </Router>
