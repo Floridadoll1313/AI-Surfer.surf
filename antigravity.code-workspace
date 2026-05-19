@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "src",
+			"uri": "vscode-vfs://github/OTDAISS/otdaisurfer/src"
+		}
+	],
+	"settings": {
+		"terminal.integrated.commandsToSkipShell": [
+			""
+		],
+		"gitlens.views.repositories.showBranchComparison": "branch",
+		"gitlens.heatmap.locations": [
+			"gutter",
+			"overview",
+			"line"
+		],
+		"gitlens.graph.minimap.additionalTypes": [
+			"localBranches",
+			"stashes",
+			"remoteBranches"
+		],
+		"gitlens.graph.showDetailsView": "open"
+	}
+}
